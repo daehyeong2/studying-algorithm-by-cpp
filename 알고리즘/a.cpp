@@ -1,20 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int N, cnt;
-void solve(int N) {
-	cnt++;
-	cout << cnt << " : " << N << "\n";
-	if (N == 0) return;
-	for (int i = 0; i < 3; i++) {
-		solve(N - 1);
-	}
-	return;
-}
-
+int N, M, A, B, a, psum[100004], sum;
 int main() {
-	cin >> N;
-	solve(N);
-	cout << "cnt : " << cnt << "\n";
-	return 0l;
+	cin >> N >> M;
+	for (int i = 1; i <= N; i++) {
+		cin >> a;
+		sum += a;
+		psum[i] = sum;
+	}
+	for (int i = 0; i < M; i++) {
+		cin >> A >> B;
+		cout << psum[B] - psum[A - 1] << "\n";
+	}
+	return 0;
 }
