@@ -1,21 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<int> v;
+int N, cnt;
+void solve(int N) {
+	cnt++;
+	cout << cnt << " : " << N << "\n";
+	if (N == 0) return;
+	for (int i = 0; i < 3; i++) {
+		solve(N - 1);
+	}
+	return;
+}
 
 int main() {
-	int n = 35;
-	int b = 3;
-
-	while (n > 1) {
-		v.push_back(n % b);
-		n /= b;
-	}
-	if (n == 1) v.push_back(1);
-	reverse(v.begin(), v.end());
-	for (int a : v) {
-		if (a >= 10) cout << char(a + 55);
-		else cout << a;
-	}
-	return 0;
+	cin >> N;
+	solve(N);
+	cout << "cnt : " << cnt << "\n";
+	return 0l;
 }
