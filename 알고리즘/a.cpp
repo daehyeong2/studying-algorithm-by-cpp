@@ -1,51 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, t, max_ = -1;
-char c;
-vector<vector<char>> v;
-map<int, int> mp = {};
+const int V = 4;
+vector<int> adj[V]; bool visited[V];
+
+void go(int from) {
+	visited[from] = 1;
+	cout << from << "\n";
+	for (int i : adj[from]) {
+		if (!visited[i]) {
+			go(i);
+		}
+	}
+}
 
 int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cin.tie(NULL);
-    cin >> n >> m;
-    for (int i = 0; i < n; i++) {
-        v.push_back({});
-        for (int j = 0; j < m; j++) {
-            cin >> c;
-            v[i].push_back(c);
-        }
-    }
-    while (true) {
-        if (t * t > 999999999) break;
-        mp[t * t] = 1;
-        t++;
-    }
-    if (n == 1 && m == 1) {
-        if (mp[v[0][0] - 48]) cout << v[0][0] << "\n";
-        else cout << -1 << "\n";
-        return 0;
-    }
-    for (int i = -n + 1; i < n; i++) {
-        for (int j = -m + 1; j < m; j++) {
-            if (i == 0 && j == 0) continue;
-            for (int k = 0; k < n; k++) {
-                for (int l = 0; l < m; l++) {
-                    string str = "";
-                    int i_ = k;
-                    int j_ = l;
-                    while (true) {
-                        str += v[i_][j_];
-                        int ret = stoi(str);
-                        if (mp[ret]) max_ = max(max_, ret);
-                        i_ += i;
-                        if (i_ >= n || i_ < 0) break;
-                        j_ += j;
-                        if (j_ >= m || j_ < 0) break;
-                    }
-                }
-            }
-        }
-    }
-    cout << max_ << "\n";
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+	adj[0].push_back(1);
+	adj[0].push_back(2);
+	adj[0].push_back(3);
+
+	adj[1].push_back(0);
+	adj[1].push_back(2);
+
+	adj[2].push_back(0);
+	adj[2].push_back(1);
+
+	adj[3].push_back(0);
+
+	for (int i = 0; i < V; i++) {
+		if (adj[i].size() && !visited[i]) {
+			go(i);
+		}
+	}
+
+	return 0;
 }
