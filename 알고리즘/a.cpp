@@ -1,38 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int V = 4;
-vector<int> adj[V]; bool visited[V];
-
-void go(int from) {
-	visited[from] = 1;
-	cout << from << "\n";
-	for (int i : adj[from]) {
-		if (!visited[i]) {
-			go(i);
-		}
-	}
-}
+const int max_n = 500000;
+int a, b, visited[2][max_n + 4], turn = 1;
+bool ok;
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-	adj[0].push_back(1);
-	adj[0].push_back(2);
-	adj[0].push_back(3);
-
-	adj[1].push_back(0);
-	adj[1].push_back(2);
-
-	adj[2].push_back(0);
-	adj[2].push_back(1);
-
-	adj[3].push_back(0);
-
-	for (int i = 0; i < V; i++) {
-		if (adj[i].size() && !visited[i]) {
-			go(i);
+	cin >> a >> b;
+	if (a == b) { cout << 0 << "\n"; return 0; }
+	queue<int> q;
+	visited[0][a] = 1;
+	q.push(a);
+	while (q.size()) {
+		b += turn;
+		if (b > max_n) break;
+		if(visited[turn % 2][b]) {
+			ok = 1; break;
 		}
+		int qSize = q.size();
+		for (int _ = 0; _ < qSize; _++) {
+			int n = q.front(); q.pop();
+			for (int i : {n + 1, n - 1, n * 2}) {
+				if (i < 0 || i > max_n || visited[turn % 2][i]) continue;
+				visited[turn % 2][i] = visited[(turn + 1) % 2][n] + 1;
+				if (i == b) {
+					ok = 1;
+					break;
+				}
+				q.push(i);
+			}
+			if (ok) break;
+		}
+		if (ok) break;
+		turn++;
 	}
-
-	return 0;
+	if (ok) cout << turn << "\n";
+	else cout << -1 << "\n";
 }
