@@ -1,57 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, cnt, mx, big, d[54][54], visited[54][54], compSize[2504], dy[] = {0, -1, 0, 1}, dx[] = {-1, 0, 1, 0};
-
-int dfs(int y, int x, int cnt) {
-    if (visited[y][x]) return 0;
-    visited[y][x] = cnt;
-    int ret = 1;
-    for (int i = 0; i < 4; i++) {
-        if (!(d[y][x] & (1<<i))) {
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-            ret += dfs(ny, nx, cnt);
-        }
-    }
-    return ret;
-}
+int n, argument, mask;
+string command;
 
 int main(){
     ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    cin >> m >> n;
+    cin >> n;
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cin >> d[i][j];
+        cin >> command;
+        if (command == "add") {
+            cin >> argument;
+            mask |= (1 << (argument-1));
+        } else if (command == "remove") {
+            cin >> argument;
+            mask &= ~(1<<(argument-1));
+        } else if (command == "check") {
+            cin >> argument;
+            if (mask & (1<<(argument-1))) cout << 1 << "\n";
+            else cout << 0 << "\n";
+        } else if (command == "toggle") {
+            cin >> argument;
+            if (mask & (1<<(argument-1))) mask &= ~(1<<(argument-1));
+            else mask |= (1<<(argument-1));
+        } else if (command == "all") {
+            mask |= ((1<<20)-1);
+        } else if (command == "empty") {
+            mask = 0;
         }
     }
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if (!visited[i][j]) {
-                cnt++;
-                compSize[cnt] = dfs(i, j, cnt);
-                mx = max(mx, compSize[cnt]);
-            }
-        }
-    }
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if (i + 1 < n) {
-                int a = visited[i][j];
-                int b = visited[i + 1][j];
-                if (a != b) {
-                    big = max(big, compSize[a] + compSize[b]);
-                }
-            }
-            if (j + 1 < m) {
-                int a = visited[i][j];
-                int b = visited[i][j + 1];
-                if (a != b) {
-                    big = max(big, compSize[a] + compSize[b]);
-                }
-            }
-        }
-    }
-    cout << cnt << "\n" << mx << "\n" << big << "\n";
     return 0;
 }
