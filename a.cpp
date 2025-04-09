@@ -21,8 +21,7 @@ int main(){
             else cout << 0 << "\n";
         } else if (command == "toggle") {
             cin >> argument;
-            if (mask & (1<<(argument-1))) mask &= ~(1<<(argument-1));
-            else mask |= (1<<(argument-1));
+            mask ^= (1<<(argument-1));
         } else if (command == "all") {
             mask |= ((1<<20)-1);
         } else if (command == "empty") {
