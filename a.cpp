@@ -1,48 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, mx, d[4][4], visited[4][4];
-char ch;
+int t, h, l, cnt, d[51][51], elv[51];
+map<int, pair<int, int>> mp;
 
 int main(){
     ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    cin >> n >> m;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cin >> ch;
-            d[i][j] = ch-'0';
-        }
-    }
-    for (int i = 0; i < (1<<n*m); i++) {
-        memset(visited, 0, sizeof(visited));
-        int ret = 0;
-        for (int j = 0; j < n; j++) {
-            for (int k = 0; k < m; k++) {
-                if (visited[j][k]) continue;
-                int idx = j * m + k;
-                if (i & (1<<idx)) {
-                    int cnt = 0;
-                    for (int l = j; l < n; l++) {
-                        if (i & (1<<(l * m + k))) {
-                            cnt = (cnt*10) + d[l][k];
-                            visited[l][k] = 1;
-                        } else break;
-                    }
-                    ret += cnt;
-                } else {
-                    int cnt = 0;
-                    for (int l = k; l < m; l++) {
-                        if (~i & (1<<(j * m + l))) {
-                            cnt = (cnt*10) + d[j][l];
-                            visited[j][l] = 1;
-                        } else break;
-                    }
-                    ret += cnt;
+    cin >> t;
+    for (int i = 0; i < t; i++) {
+        memset(elv, 0, sizeof(elv));
+        memset(d, 0, sizeof(d));
+        mp = {}; cnt = 0;
+        cin >> h >> l;
+        for (int j = 0; j < h; j++) {
+            for (int k = 0; k < l; k++) {
+                cin >> d[j][k];
+                if (d[j][k] != -1) {
+                    mp[d[j][k]] = {j, k};
                 }
+                cnt = max(cnt, d[j][k]);
             }
         }
-        mx = max(mx, ret);
+        int ret = 0;
+        for (int j = 1; j <= cnt; j++) {
+            int time = mp[j].first * 20 + min(abs(elv[mp[j].first] - mp[j].second), min(l-mp[j].second + elv[mp[j].first], l-elv[mp[j].first] + mp[j].second)) * 5;
+            elv[mp[j].first] = mp[j].second;
+            ret += time;
+        }
+        cout << ret << "\n";
     }
-    cout << mx << "\n";
     return 0;
 }
