@@ -1,22 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int n;
-double a;
-priority_queue<double> pq;
-vector<double> ret;
+typedef pair<int, int> P;
+P L[1000004];
+int n, from, to, l, r, ret;
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     cin >> n;
     for (int i = 0; i < n; i++) {
-        cin >> a;
-        pq.push(a);
-        if (pq.size() > 5) pq.pop();
+        cin >> from >> to;
+        L[i] = {from, to};
     }
-    for (int i = 0; i < 5; i++) {
-        ret.push_back(pq.top()); pq.pop();
+    sort(L, L + n);
+    l = L[0].first; r = L[0].second;
+    for (int i = 1; i < n; i++) {
+        if (r < L[i].first) {
+            ret += (r-l);
+            l = L[i].first; r = L[i].second;
+        } else if (L[i].first <= r && L[i].second >= r) r = L[i].second;
     }
-    for (int i = 4; i >= 0; i--) cout << ret[i] << "\n";
+    ret += r-l;
+    cout << ret << "\n";
     return 0;
 }
