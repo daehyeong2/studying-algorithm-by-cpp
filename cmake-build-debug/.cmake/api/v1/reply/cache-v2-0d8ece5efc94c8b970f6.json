@@ -2,42 +2,6 @@
 	"entries" : 
 	[
 		{
-			"name" : "Algorithm_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/gwondaehyeong/Documents/Study/Algorithm/cmake-build-debug"
-		},
-		{
-			"name" : "Algorithm_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "Algorithm_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/Users/gwondaehyeong/Documents/Study/Algorithm"
-		},
-		{
 			"name" : "CMAKE_ADDR2LINE",
 			"properties" : 
 			[
@@ -807,7 +771,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk"
+			"value" : "/Library/Developer/CommandLineTools/SDKs/MacOSX15.4.sdk"
 		},
 		{
 			"name" : "CMAKE_PLATFORM_INFO_INITIALIZED",
@@ -855,7 +819,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "Algorithm"
+			"value" : "MyProjectName"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1154,7 +1118,7 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "Project_BINARY_DIR",
+			"name" : "MyProjectName_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1166,7 +1130,7 @@
 			"value" : "/Users/gwondaehyeong/Documents/Study/Algorithm/cmake-build-debug"
 		},
 		{
-			"name" : "Project_IS_TOP_LEVEL",
+			"name" : "MyProjectName_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1178,7 +1142,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "Project_SOURCE_DIR",
+			"name" : "MyProjectName_SOURCE_DIR",
 			"properties" : 
 			[
 				{
