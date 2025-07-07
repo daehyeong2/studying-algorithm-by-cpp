@@ -1,66 +1,57 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int r, c, t, ret, a[54][54], dy[] = {-1, 0, 1, 0}, dx[] = {0, 1, 0, -1};
+int n, k, ret[5], a[1004][1004], visited[1004][1004];
+int dy[] = {-1, -1, -1, 0, 1, 1, 1, 0}, dx[] = {-1, 0, 1, 1, 1, 0, -1, -1};
 
-void dfs(int y, int x, int v, bool isTop, int dir) {
-    int nextV = a[y][x];
-    a[y][x] = v;
-    int ny = y + dy[dir];
-    int nx = x + dx[dir];
-    if (ny < 0 || nx < 0 || ny >= r || nx >= c || a[ny][nx] == -1) return;
-    if (nx == c-1) {
-        if (isTop) dir = 0;
-        else dir = 2;
+void dfs(int y, int x) {
+    int hap[5] = {0, 0, 0, 0, 0};
+    vector<pair<int, int>> v;
+    bool flag = false;
+    for (int i = 0; i < 8; i++) {
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if (ny < 0 || nx < 0 || ny >= n || nx >= n || visited[ny][nx]) continue;
+        if (a[ny][nx] == 0) continue;
+        if (a[ny][nx] == k) {
+            flag = true;
+            continue;
+        }
+        if ((i-1) % 2 == 0) {
+            v.emplace_back(ny, nx);
+            visited[ny][nx] = 1;
+            hap[a[ny][nx]-1]++;
+        }
     }
-    if (ny == r-1 || ny == 0) dir = 3;
-    if (nx == 0) {
-        if (isTop) dir = 2;
-        else dir = 0;
+    if (flag) {
+        for (int i = 0; i < 5; i++) {
+            ret[i] += hap[i];
+        }
+    } else {
+        for (int i = 0; i < v.size(); i++) {
+            visited[v[i].first][v[i].second] = 0;
+        }
     }
-    dfs(ny, nx, nextV, isTop, dir);
+    for (int i = 1; i < 8; i+=2) {
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if (ny < 0 || nx < 0 || ny >= n || nx >= n || visited[ny][nx] || a[ny][nx] != 0) continue;
+        visited[ny][nx] = 1;
+        dfs(ny, nx);
+    }
 }
 
 int main(){
-    cin >> r >> c >> t;
-    for(int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
+    cin >> n >> k;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             cin >> a[i][j];
         }
     }
-    while (t--) {
-        int newA[54][54];
-        memcpy(newA, a, sizeof(a));
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                if (a[i][j] > 0) {
-                    int amount = a[i][j] / 5;
-                    int cnt = 0;
-                    for (int k = 0; k < 4; k++) {
-                        int ny = i + dy[k];
-                        int nx = j + dx[k];
-                        if (ny < 0 || ny >= r || nx < 0 || nx >= c || a[ny][nx] == -1) continue;
-                        newA[ny][nx] += amount;
-                        cnt++;
-                    }
-                    newA[i][j] -= amount * cnt;
-                }
-            }
-        }
-        memcpy(a, newA, sizeof(newA));
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < c; j++) {
-                if (a[i][j] == -1) {
-                    dfs(i, j+1, 0, a[i-1][j] != -1, 1);
-                }
-            }
-        }
+    visited[n-1][0] = 1;
+    dfs(n-1, 0);
+    for (int i = 0; i < 5; i++) {
+        cout << ret[i] << "\n";
     }
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
-            if (a[i][j] != -1) ret += a[i][j];
-        }
-    }
-    cout << ret << "\n";
     return 0;
 }
