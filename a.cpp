@@ -1,47 +1,74 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-char ch;
-int n, m, ret, board[54][54], visited[54][54], cnt[54][54];
+int n, arr[54], che[2004], visited[104], b[104];
+vector<vector<int>> node;
+vector<int> ret;
 
-int go(int y, int x, int k) {
-    if (cnt[y][x] && cnt[y][x] >= k) return cnt[y][x];
-    int mx = k;
-    for (int dir = 0; dir < 4; dir++) {
-        int ny = -1, nx = -1;
-        if (dir == 0) {
-            ny = y - board[y][x], nx = x;
-        } else if (dir == 1) {
-            ny = y + board[y][x], nx = x;
-        } else if (dir == 2) {
-            ny = y, nx = x - board[y][x];
-        } else if (dir == 3) {
-            ny = y, nx = x + board[y][x];
+bool bmatch(int here) {
+    if (visited[here]) return false;
+    visited[here] = 1;
+    for (int there : node[here]) {
+        if (!b[there] || bmatch(b[there])) {
+            b[here] = there;
+            b[there] = here;
+            return true;
         }
-        if (ny < 0 || ny >= n || nx < 0 || nx >= m || board[ny][nx] == 0) continue;
-        if (visited[ny][nx]) {
-            cout << -1 << "\n";
-            exit(0);
-        }
-        visited[ny][nx] = 1;
-        int output = go(ny, nx, k+1);
-        mx = max(mx, output);
-        visited[ny][nx] = 0;
     }
-    if (cnt[y][x] < k) cnt[y][x] = k;
-    return mx;
+    return false;
 }
 
 int main(){
-    cin >> n >> m;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cin >> ch;
-            if (ch == 'H') board[i][j] = 0;
-            else board[i][j] = ch-'0';
+    cin >> n;
+    for (int i = 0; i < n+4; i++) node.emplace_back();
+    fill(begin(che), end(che), 1);
+    che[0] = 0, che[1] = 0;
+    for (int i = 2; i*i <= 2000; i++) {
+        if (che[i]) {
+            for (int j = i*i; j <= 2000; j+=i) {
+                che[j] = 0;
+            }
         }
     }
-    visited[0][0] = 1;
-    cout << go(0, 0, 1) << "\n";
+    for (int i = 1; i <= n; i++) {
+        cin >> arr[i];
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (i==j) continue;
+            if (find(node[i].begin(), node[i].end(), j) != node[i].end()) continue;
+            int first = arr[i];
+            int second = arr[j];
+            if (che[first+second]) {
+                node[i].push_back(j);
+                node[j].push_back(i);
+            }
+        }
+    }
+    for (int root : node[1]) {
+        memset(b, 0, sizeof(b));
+        int cnt = 1;
+        b[1] = root;
+        b[root] = 1;
+        for (int i = 2; i <= n; i++) {
+            if (i == root) continue;
+            memset(visited, 0, sizeof(visited));
+            visited[1] = 1;
+            visited[root] = 1;
+            if (!b[i] && bmatch(i)) cnt++;
+        }
+        if (cnt == n/2) {
+            ret.push_back(arr[root]);
+        }
+    }
+    if (ret.empty()) {
+        cout << -1 << "\n";
+        exit(0);
+    }
+    sort(ret.begin(), ret.end());
+    for (int v : ret) {
+        cout << v << " ";
+    }
+    cout << "\n";
     return 0;
 }
