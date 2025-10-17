@@ -1,74 +1,44 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, arr[54], che[2004], visited[104], b[104];
-vector<vector<int>> node;
-vector<int> ret;
-
-bool bmatch(int here) {
-    if (visited[here]) return false;
-    visited[here] = 1;
-    for (int there : node[here]) {
-        if (!b[there] || bmatch(b[there])) {
-            b[here] = there;
-            b[there] = here;
-            return true;
-        }
-    }
-    return false;
-}
+unsigned char a, b;
+int fst, snd, n, c, here, ret, S=0, E=25, C[256][256], F[256][256], pre[256];
+vector<vector<int>> D;
 
 int main(){
     cin >> n;
-    for (int i = 0; i < n+4; i++) node.emplace_back();
-    fill(begin(che), end(che), 1);
-    che[0] = 0, che[1] = 0;
-    for (int i = 2; i*i <= 2000; i++) {
-        if (che[i]) {
-            for (int j = i*i; j <= 2000; j+=i) {
-                che[j] = 0;
+    for (int i = 0; i < 256; i++) D.emplace_back();
+    for (int i = 0; i < n; i++) {
+        cin >> a >> b >> c;
+        fst = a - 'A'; snd = b - 'A';
+        D[snd].push_back(fst);
+        D[fst].push_back(snd);
+        C[fst][snd] += c;
+        C[snd][fst] += c;
+    }
+    while (true) {
+        queue<int> q;
+        q.push(S);
+        memset(pre, -1, sizeof(pre));
+        while (!q.empty()) {
+            here = q.front(); q.pop();
+            for (int there : D[here]) {
+                if (F[here][there] < C[here][there] && pre[there] == -1) {
+                    pre[there] = here;
+                    q.push(there);
+                    if (there == E) break;
+                }
             }
         }
-    }
-    for (int i = 1; i <= n; i++) {
-        cin >> arr[i];
-    }
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= n; j++) {
-            if (i==j) continue;
-            if (find(node[i].begin(), node[i].end(), j) != node[i].end()) continue;
-            int first = arr[i];
-            int second = arr[j];
-            if (che[first+second]) {
-                node[i].push_back(j);
-                node[j].push_back(i);
-            }
+        if (pre[E] == -1) break;
+        int flow = 1e9;
+        for (int i = E; i != S; i = pre[i]) flow = min(flow, C[pre[i]][i]-F[pre[i]][i]);
+        for (int i = E; i != S; i = pre[i]) {
+            F[pre[i]][i] += flow;
+            F[i][pre[i]] -= flow;
         }
+        ret += flow;
     }
-    for (int root : node[1]) {
-        memset(b, 0, sizeof(b));
-        int cnt = 1;
-        b[1] = root;
-        b[root] = 1;
-        for (int i = 2; i <= n; i++) {
-            if (i == root) continue;
-            memset(visited, 0, sizeof(visited));
-            visited[1] = 1;
-            visited[root] = 1;
-            if (!b[i] && bmatch(i)) cnt++;
-        }
-        if (cnt == n/2) {
-            ret.push_back(arr[root]);
-        }
-    }
-    if (ret.empty()) {
-        cout << -1 << "\n";
-        exit(0);
-    }
-    sort(ret.begin(), ret.end());
-    for (int v : ret) {
-        cout << v << " ";
-    }
-    cout << "\n";
+    cout << ret << "\n";
     return 0;
 }
